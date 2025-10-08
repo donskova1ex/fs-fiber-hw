@@ -1,9 +1,14 @@
 package main
 
 import (
+	"context"
 	"fiber-hw/config"
 	"fiber-hw/internal/pages"
 	"fiber-hw/pkg/logger"
+	"os"
+	"os/signal"
+	"syscall"
+	"time"
 
 	"github.com/gofiber/contrib/fiberzerolog"
 	"github.com/gofiber/fiber/v2"
@@ -24,8 +29,22 @@ func main() {
 
 	pages.NewHandler(app, customLog)
 
-	err := app.Listen(":3000")
-	if err != nil {
-		panic(err)
+	go func() {
+		err := app.Listen(cfg.AppConfig.Port)
+		if err != nil {
+			customLog.Println("Error starting server")
+		}
+	}()
+	sigChan := make(chan os.Signal, 1)
+	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
+	<-sigChan
+	customLog.Println("Shutting down signal received")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	customLog.Println("Shutting down gracefully for 3 seconds")
+	if err := app.ShutdownWithContext(ctx); err != nil {
+		customLog.Println("Error shutting down app")
 	}
+	customLog.Println("Server gracefully stopped")
 }

@@ -11,6 +11,11 @@ import (
 type Config struct {
 	DatabaseConfig *DatabaseConfig
 	LogConfig      *LogConfig
+	AppConfig      *AppConfig
+}
+
+type AppConfig struct {
+	Port string
 }
 
 type DatabaseConfig struct {
@@ -63,6 +68,9 @@ func NewConfig() *Config {
 		LogConfig: &LogConfig{
 			Level:  getInt("LOG_LEVEL", 0),
 			Format: getString("LOG_FORMAT", "json"),
+		},
+		AppConfig: &AppConfig{
+			Port: getString("APP_PORT", ":3000"),
 		},
 	}
 }
