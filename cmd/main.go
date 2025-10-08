@@ -10,9 +10,9 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/gofiber/contrib/fiberzerolog"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/recover"
+	slogfiber "github.com/samber/slog-fiber"
 )
 
 func main() {
@@ -22,9 +22,7 @@ func main() {
 	customLog := logger.NewLogger(cfg.LogConfig)
 
 	app := fiber.New(fiber.Config{})
-	app.Use(fiberzerolog.New(fiberzerolog.Config{
-		Logger: customLog,
-	}))
+	app.Use(slogfiber.New(customLog))
 	app.Use(recover.New())
 
 	pages.NewHandler(app, customLog)
@@ -32,19 +30,19 @@ func main() {
 	go func() {
 		err := app.Listen(cfg.AppConfig.Port)
 		if err != nil {
-			customLog.Println("Error starting server")
+			customLog.Error(err.Error())
 		}
 	}()
 	sigChan := make(chan os.Signal, 1)
 	signal.Notify(sigChan, syscall.SIGINT, syscall.SIGTERM)
 	<-sigChan
-	customLog.Println("Shutting down signal received")
+	customLog.Info("Shutting down signal received")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
-	customLog.Println("Shutting down gracefully for 3 seconds")
+	customLog.Info("Shutting down gracefully for 3 seconds")
 	if err := app.ShutdownWithContext(ctx); err != nil {
-		customLog.Println("Error shutting down app")
+		customLog.Error(err.Error())
 	}
-	customLog.Println("Server gracefully stopped")
+	customLog.Info("Server gracefully stopped")
 }
