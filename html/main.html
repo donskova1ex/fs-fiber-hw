@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Главная страница</title>
+    <style>
+        .categories-container {
+            margin: 20px 0;
+            padding: 0;
+        }
+
+        .categories-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .categories-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .category-item {
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 16px;
+            padding: 6px 12px;
+            font-size: 14px;
+            color: #555;
+            transition: all 0.2s ease;
+        }
+
+        .category-item:hover {
+            background-color: #e0e0e0;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+<div class="categories-container">
+    <div class="categories-title">Категории:</div>
+    <ul class="categories-list">
+        {{range .}}
+        <li class="category-item">{{.}}</li>
+        {{end}}
+    </ul>
+</div>
+</body>
+</html>
