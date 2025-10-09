@@ -9,7 +9,7 @@ import (
 func NewLogger(loggerCfg *config.LogConfig) *slog.Logger {
 	level := parseLogLevel(loggerCfg.Level)
 	var loggerHandler slog.Handler
-
+	
 	switch loggerCfg.Format {
 	case "json":
 		loggerHandler = slog.NewJSONHandler(os.Stderr, &slog.HandlerOptions{Level: level})
