@@ -23,7 +23,7 @@ type DatabaseConfig struct {
 }
 
 type LogConfig struct {
-	Level  int
+	Level  string
 	Format string
 }
 
@@ -66,7 +66,7 @@ func NewConfig() *Config {
 			Url: getString("DATABASE_URL", ""),
 		},
 		LogConfig: &LogConfig{
-			Level:  getInt("LOG_LEVEL", 0),
+			Level:  getString("LOG_LEVEL", "info"),
 			Format: getString("LOG_FORMAT", "json"),
 		},
 		AppConfig: &AppConfig{
