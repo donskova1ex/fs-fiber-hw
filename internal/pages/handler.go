@@ -21,5 +21,6 @@ func NewHandler(router fiber.Router, logger *slog.Logger) {
 }
 
 func (h *Handler) homePage(c *fiber.Ctx) error {
-	return c.SendString("Hello, World!")
+	categories := []string{"#Еда", "#Животные", "#Машины", "#Спорт", "#Технологии", "#Прочее"}
+	return c.Render("main", categories)
 }
